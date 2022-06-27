@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <sys/stat.h>
 #include <fstream>
+#include <cstdio>
 
 using namespace std;
 
@@ -25,7 +26,24 @@ public:
     void setDomainSize(float a, float b, float c);
     void setElements(int ax, int ay, int az);
     void computeVertices();
+	void writeVertices();
+	void writeBlocks();
+	void writeEdges();
 };
+
+void blockMesh::writeVertices()
+{
+	blockMeshDict << "vertices\n(\n";
+	blockMeshDict << "  (" << x[0] << " " << y[0] << " " << z[0] << ")\n";
+	blockMeshDict << "  (" << x[nx] << " " << y[0] << " " << z[0] << ")\n";
+	blockMeshDict << "  (" << x[nx] << " " << y[ny] << " " << z[0] << ")\n";
+	blockMeshDict << "  (" << x[0] << " " << y[ny] << " " << z[0] << ")\n";
+	blockMeshDict << "  (" << x[0] << " " << y[0] << " " << z[nz] << ")\n";
+	blockMeshDict << "  (" << x[nx] << " " << y[0] << " " << z[nz] << ")\n";
+	blockMeshDict << "  (" << x[nx] << " " << y[ny] << " " << z[nz] << ")\n";
+	blockMeshDict << "  (" << x[0] << " " << y[ny] << " " << z[nz] << ")\n";
+	blockMeshDict << ");\n";
+}
 
 void blockMesh::computeVertices()
 {
@@ -33,12 +51,19 @@ void blockMesh::computeVertices()
     dx = lx / float(nx);
     dy = ly / float(ny);
     dz = lz / float(nz);
-    for (int i = 0; i < nx - 1; i++)
-        x[i + 1] = x[i] + dx;
-    for (int i = 0; i < ny - 1; i++)
-        y[i + 1] = y[i] + dy;
-    for (int i = 0; i < nz - 1; i++)
-        z[i + 1] = z[i] + dz;
+	printf("\n%f %f %f\n", dx, dy, dz);
+	if (nx == 1)
+		x[1] = lx;
+	else
+		x[nx] = lx;
+	if (ny == 1)
+		y[1] = ly;
+	else
+		y[ny] = ly;
+	if (nz == 1)
+		z[1] = lz;
+	else
+		z[nz] = lz;
 }
 
 void blockMesh::showLogo(){
@@ -48,6 +73,17 @@ void blockMesh::showLogo(){
     cout<<"===================================================\n\n";
 }
 
+void blockMesh::writeBlocks()
+{
+	blockMeshDict << "blocks\n(\n";
+	blockMeshDict << "  hex (0 1 2 3 4 5 6 7) (" << nx << " " << ny << " " << nz << ")";
+	blockMeshDict << " simpleGrading (1 1 1)\n);\n\n";
+}
+
+void blockMesh::writeEdges()
+{
+	blockMeshDict << "edges\n(\n);\n\n";
+}
 // Constructor
 // Create the blockMeshDict file.
 // initialize x, y, z vertices of the domain to (0,0,0)
@@ -127,7 +163,12 @@ int test()
     blockMesh mesh;
     mesh.showLogo();
     mesh.writeHeader();
-
+	mesh.setDomainSize(10, 2, 1);
+	mesh.setElements(10, 5, 1);
+	mesh.computeVertices();
+	mesh.writeVertices();
+	mesh.writeBlocks();
+	mesh.writeEdges();
     return 0;
 }
 
