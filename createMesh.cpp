@@ -42,13 +42,14 @@ public:
 	void writeEdges();
     void assignBoundary(int num, int type, char*name, int*faces);
     void writeBoundary(int num);
+    void writeBoundaries(); // to write all the 6 boundary patches
 };
 
 void blockMesh::writeBoundary(int num)
 {
     const char* types[4] = { "wall", "patch", "symmetryPlane", "symmetry" };
     blockMeshDict << boundaries[num].name << endl;
-    blockMeshDict << "{\n\t" << "type " << types[boundaries[num].type] << " ;\n";
+    blockMeshDict << "\t{\n\t" << "type " << types[boundaries[num].type] << " ;\n";
     blockMeshDict << "faces\n\t(\n\t\t(" << boundaries[num].faces[0] << " " << boundaries[num].faces[1]
         << " " << boundaries[num].faces[2] << " " << boundaries[num].faces[3] << ")\n\t\t);\n\t}";
 }
@@ -199,7 +200,8 @@ int test()
 	mesh.writeVertices();
 	mesh.writeBlocks();
 	mesh.writeEdges();
-    mesh.assignBoundary(0, 0, "movingWall", [3, 7, 6, 2]);
+    int faces[4] = { 3, 7, 6, 2 };
+    mesh.assignBoundary(0, 0, "movingWall", faces);
     mesh.writeBoundary(0);
     return 0;
 }
