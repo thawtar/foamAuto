@@ -45,13 +45,45 @@ public:
     void writeBoundaries(); // to write all the 6 boundary patches
 };
 
+void blockMesh::writeBoundaries()
+{
+    // Vertices are counter-clockwise for each boundary face
+    // Vertices: 0 1 2 3 (bottom) and 4 5 6 7 (top)
+    // left boundary : x-min (0 3 7 4)
+    // right boundary: x-max (1 2 6 5)
+    // top boundary  : z-max (4 5 6 7)
+    // bottom boundary:z-min (0 1 2 3)
+    // front boundary: y-min (4 5 1 0)
+    // back boundary : y-max (7 6 2 3)
+    const int left[4]={0,3,7,4};
+    const int right[4]={1,2,6,5};
+    const int top[4]={4,5,6,7};
+    const int bottom[4]={0,1,2,3};
+    const int front[4]={4,5,1,0};
+    const int back[4]={7,6,2,3};
+    char*name[6]={"left","right","top","bottom","front","back"};
+    int faces[6][4]={{0,3,7,4},{1,2,6,5},{4,5,6,7},{0,1,2,3},{4,5,1,0},{7,6,2,3}};
+    blockMeshDict << "boundary\n(\n";
+    for(int i=0;i<6;i++)
+    {
+        //memcpy(&boundaries[i].face, faces[i]);
+        //boundaries[i].type=1;
+        //strcpy(boundaries[i].name,name[i]);
+        assignBoundary(i,1,name[i],faces[i]);
+    }
+    for(int i=0;i<6;i++)
+        writeBoundary(i);
+    blockMeshDict<<");\n\n";
+}
+
 void blockMesh::writeBoundary(int num)
 {
     const char* types[4] = { "wall", "patch", "symmetryPlane", "symmetry" };
-    blockMeshDict << boundaries[num].name << endl;
-    blockMeshDict << "\t{\n\t" << "type " << types[boundaries[num].type] << " ;\n";
-    blockMeshDict << "faces\n\t(\n\t\t(" << boundaries[num].faces[0] << " " << boundaries[num].faces[1]
-        << " " << boundaries[num].faces[2] << " " << boundaries[num].faces[3] << ")\n\t\t);\n\t}";
+    blockMeshDict <<"\t"<< boundaries[num].name << endl;
+    blockMeshDict << "\t{\n\t" << " type " << types[boundaries[num].type] << " ;\n";
+    blockMeshDict << "\t faces\n\t(\n\t\t (" << boundaries[num].faces[0] << " " << boundaries[num].faces[1]
+        << " " << boundaries[num].faces[2] << " " << boundaries[num].faces[3]
+    << " )\n\t );\n\t}\n\n";
 }
 
 void blockMesh::assignBoundary(int num, int type, char* name, int* faces)
@@ -64,6 +96,14 @@ void blockMesh::assignBoundary(int num, int type, char* name, int* faces)
 
 void blockMesh::writeVertices()
 {
+    // Vertex 0: xmin, ymin, zmin
+    // Vertex 1: xmax, ymin, zmin
+    // Vertex 2: xmax, ymax, zmin
+    // Vertex 3: xmin, ymax, zmin
+    // Vertex 4: xmin, ymin, zmax
+    // Vertex 5: xmax, ymin, zmax
+    // Vertex 6: xmax, ymax, zmax
+    // Vertex 7: xmin, ymax, zmax
 	blockMeshDict << "vertices\n(\n";
 	blockMeshDict << "  (" << x[0] << " " << y[0] << " " << z[0] << ")\n";
 	blockMeshDict << "  (" << x[nx] << " " << y[0] << " " << z[0] << ")\n";
@@ -78,11 +118,6 @@ void blockMesh::writeVertices()
 
 void blockMesh::computeVertices()
 {
-    float dx, dy, dz;
-    dx = lx / float(nx);
-    dy = ly / float(ny);
-    dz = lz / float(nz);
-	printf("\n%f %f %f\n", dx, dy, dz);
 	if (nx == 1)
 		x[1] = lx;
 	else
@@ -202,7 +237,8 @@ int test()
 	mesh.writeEdges();
     int faces[4] = { 3, 7, 6, 2 };
     mesh.assignBoundary(0, 0, "movingWall", faces);
-    mesh.writeBoundary(0);
+    mesh.writeBoundaries();
+    //mesh.writeBoundary(0);
     return 0;
 }
 
