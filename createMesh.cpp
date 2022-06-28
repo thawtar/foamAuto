@@ -3,11 +3,21 @@
 #include <sys/stat.h>
 #include <fstream>
 #include <cstdio>
+#include <cstring>
 
 using namespace std;
 
 #ifndef BLOCKMESHCREATE
 #define BLOCKMESHCREATE
+
+struct boundary
+{
+    char name[20];
+    int type;
+    int faces[4];
+
+}typedef boundary;
+
 class blockMesh
 {
 private:
@@ -17,6 +27,7 @@ private:
     float lx, ly, lz; // size of the block mesh domain
     float scale;
     float x[8], y[8], z[8]; // for the vertices of the domain
+    boundary boundaries[6];
 public:
     blockMesh();
     blockMesh(float x0, float y0, float z0);
@@ -29,7 +40,26 @@ public:
 	void writeVertices();
 	void writeBlocks();
 	void writeEdges();
+    void assignBoundary(int num, int type, char*name, int*faces);
+    void writeBoundary(int num);
 };
+
+void blockMesh::writeBoundary(int num)
+{
+    const char* types[4] = { "wall", "patch", "symmetryPlane", "symmetry" };
+    blockMeshDict << boundaries[num].name << endl;
+    blockMeshDict << "{\n\t" << "type " << types[boundaries[num].type] << " ;\n";
+    blockMeshDict << "faces\n\t(\n\t\t(" << boundaries[num].faces[0] << " " << boundaries[num].faces[1]
+        << " " << boundaries[num].faces[2] << " " << boundaries[num].faces[3] << ")\n\t\t);\n\t}";
+}
+
+void blockMesh::assignBoundary(int num, int type, char* name, int* faces)
+{
+    strcpy(boundaries[num].name, name);
+    boundaries[num].type = type;
+    for (int i = 0; i < 4; i++)
+        boundaries[num].faces[i] = faces[i];
+}
 
 void blockMesh::writeVertices()
 {
@@ -169,6 +199,8 @@ int test()
 	mesh.writeVertices();
 	mesh.writeBlocks();
 	mesh.writeEdges();
+    mesh.assignBoundary(0, 0, "movingWall", [3, 7, 6, 2]);
+    mesh.writeBoundary(0);
     return 0;
 }
 
