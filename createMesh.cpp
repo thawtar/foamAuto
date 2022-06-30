@@ -1,49 +1,13 @@
 #include <iostream>
 #include <cstdlib>
 #include <sys/stat.h>
-#include <fstream>
 #include <cstdio>
 #include <cstring>
+#include "createMesh.hpp"
 
 using namespace std;
 
-#ifndef BLOCKMESHCREATE
-#define BLOCKMESHCREATE
 
-struct boundary
-{
-    char name[20];
-    int type;
-    int faces[4];
-
-}typedef boundary;
-
-class blockMesh
-{
-private:
-    int nx, ny, nz; // the number of elements in each domain direction
-    //FILE* blockmeshdict;
-    ofstream blockMeshDict;
-    float lx, ly, lz; // size of the block mesh domain
-    float scale;
-    float x[8], y[8], z[8]; // for the vertices of the domain
-    boundary boundaries[6];
-public:
-    blockMesh();
-    blockMesh(float x0, float y0, float z0);
-    ~blockMesh();
-    void showLogo();
-    int writeHeader();
-    void setDomainSize(float a, float b, float c);
-    void setElements(int ax, int ay, int az);
-    void computeVertices();
-	void writeVertices();
-	void writeBlocks();
-	void writeEdges();
-    void assignBoundary(int num, int type, char*name, int*faces);
-    void writeBoundary(int num);
-    void writeBoundaries(); // to write all the 6 boundary patches
-};
 
 void blockMesh::writeBoundaries()
 {
@@ -222,49 +186,6 @@ void blockMesh::setElements(int ax, int ay, int az)
     ny = ay;
     nz = az;
 }
-#endif
-
-float x1, x2, y1, y2, z1, z2;
-int nx, ny, nz;
-float lx, ly, lz;
-
-int test()
-{
-    blockMesh mesh;
-    mesh.showLogo();
-    mesh.writeHeader();
-	mesh.setDomainSize(lx,ly,lz);
-	mesh.setElements(nx,ny,nz);
-	mesh.computeVertices();
-	mesh.writeVertices();
-	mesh.writeBlocks();
-	mesh.writeEdges();
-    int faces[4] = { 3, 7, 6, 2 };
-    mesh.assignBoundary(0, 0, "movingWall", faces);
-    mesh.writeBoundaries();
-    //mesh.writeBoundary(0);
-    return 0;
-}
-
-void ask_data()
-{
-	cout << "\nEnter (x1, y1, z1):";
-	cin >> x1 >> y1 >> z1;
-	cout << "\nEnter (x2, y2, z2):";
-	cin >> x2 >> y2 >> z2;
-	cout << "\nEnter (nx, ny, nz):";
-	cin >> nx >> ny >> nz;
-	lx = x2 - x1;
-	ly = y2 - y1;
-	lz = z2 - z1;
-}
 
 
-int main()
-{
-
-	ask_data();
-    test();
-    return 0;
-}
 
