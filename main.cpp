@@ -1,6 +1,6 @@
 #include <iostream>
 #include "createMesh.hpp"
-
+using namespace std;
 float x1, x2, y1, y2, z1, z2;
 int nx, ny, nz;
 float lx, ly, lz;

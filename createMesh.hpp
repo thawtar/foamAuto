@@ -16,7 +16,7 @@ class blockMesh
 private:
     int nx, ny, nz; // the number of elements in each domain direction
     //FILE* blockmeshdict;
-    ofstream blockMeshDict;
+    std::ofstream blockMeshDict;
     float lx, ly, lz; // size of the block mesh domain
     float scale;
     float x[8], y[8], z[8]; // for the vertices of the domain
