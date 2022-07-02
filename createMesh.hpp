@@ -33,7 +33,7 @@ public:
 	void writeVertices();
 	void writeBlocks();
 	void writeEdges();
-    void assignBoundary(int num, int type, char*name, int*faces);
+    void assignBoundary(int num, int type, const char*name, int*faces);
     void writeBoundary(int num);
     void writeBoundaries(); // to write all the 6 boundary patches
 };

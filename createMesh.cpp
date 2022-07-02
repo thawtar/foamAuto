@@ -25,7 +25,7 @@ void blockMesh::writeBoundaries()
     const int bottom[4]={0,1,2,3};
     const int front[4]={4,5,1,0};
     const int back[4]={7,6,2,3};
-    char*name[6]={"left","right","top","bottom","front","back"};
+    const char*name[6]={"left","right","top","bottom","front","back"};
     int faces[6][4]={{0,3,7,4},{1,2,6,5},{4,5,6,7},{0,1,2,3},{4,5,1,0},{7,6,2,3}};
     blockMeshDict << "boundary\n(\n";
     for(int i=0;i<6;i++)
@@ -50,7 +50,7 @@ void blockMesh::writeBoundary(int num)
     << " )\n\t );\n\t}\n\n";
 }
 
-void blockMesh::assignBoundary(int num, int type, char* name, int* faces)
+void blockMesh::assignBoundary(int num, int type, const char* name, int* faces)
 {
     strcpy(boundaries[num].name, name);
     boundaries[num].type = type;
