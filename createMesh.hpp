@@ -42,11 +42,25 @@ public:
 class snappyHexMesh
 {
 private:
+    std::ofstream shmDict; // snappyHexMeshDict file
     int layers;
     int minRef, maxRef; // minimum and maximum refinements
+    char stl[100]; // store STL file name
+    int maxLocalCells, maxGlobalCells, minRefinementCells;
+    float maxLoadUnbalance;
+    int nCellsBetweenLevels;
+    int featureRefinementLevel;
+    int minSurfaceRefinement, maxSurfaceRefinement;
+    int resolveFeatureAngle;
+    float insidePointX, insidePointY, insidePointZ;
+    int allowFreeStandingZoneFaces;
 public:
     snappyHexMesh();
     ~snappyHexMesh();
+    int writeHeader();
+    void searchableBox(char name[100],float xx1, float xx2, float yy1, float yy2,
+    float zz1, float zz2);
+
     void run();
 };
 #endif // end of CREATEMESH
