@@ -38,4 +38,15 @@ public:
     void writeBoundaries(); // to write all the 6 boundary patches
 };
 
+
+class snappyHexMesh
+{
+private:
+    int layers;
+    int minRef, maxRef; // minimum and maximum refinements
+public:
+    snappyHexMesh();
+    ~snappyHexMesh();
+    void run();
+};
 #endif // end of CREATEMESH
