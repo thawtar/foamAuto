@@ -43,9 +43,10 @@ class snappyHexMesh
 {
 private:
     std::ofstream shmDict; // snappyHexMeshDict file
-    int layers;
+    // Parameters used in snappyHexMeshDict file
     int minRef, maxRef; // minimum and maximum refinements
     char stl[100]; // store STL file name
+    // Castellated mesh control parameters
     int maxLocalCells, maxGlobalCells, minRefinementCells;
     float maxLoadUnbalance;
     int nCellsBetweenLevels;
@@ -54,6 +55,31 @@ private:
     int resolveFeatureAngle;
     float insidePointX, insidePointY, insidePointZ;
     int allowFreeStandingZoneFaces;
+
+    // Snap Controols
+    int nSmoothPatch, nSolveIter, nRelaxIter;
+    float snapTolarence;
+    int nFeatureSnapIter, implicitFeatureSnap, explicitFeatureSnap;
+    int multiRegionFeatureSnap;
+    
+    // Add layer control parameters
+    int nSurfaceLayers;
+    int relativeSizes;
+    float expansionRatio;
+    float finalLayerThickness, minThickness;
+    int nGrow, featureAngle, slipFeatureAngle;
+    int nSnapRelaxIter, nSmoothSurfaceNormals;
+    int nSmoothNormals, nSmoothThickness;
+    float maxFaceThicknessRatio, maxThicknessToMedialRatio;
+    int minMedianAxisAngle, nBufferCellsNoExtrude, nLayerIter;
+
+
+    // Mesh Quality Controls
+
+    // Write Flags
+
+    float mergeTolerance;
+
 public:
     snappyHexMesh();
     ~snappyHexMesh();

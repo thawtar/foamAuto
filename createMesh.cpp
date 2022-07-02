@@ -3,6 +3,7 @@
 #include <sys/stat.h>
 #include <cstdio>
 #include <cstring>
+#include <string>
 #include "createMesh.hpp"
 
 using namespace std;
@@ -188,4 +189,50 @@ void blockMesh::setElements(int ax, int ay, int az)
 }
 
 
+snappyHexMesh::snappyHexMesh() // constructor, it will use default values
+{
+    // Castellated mesh controls
+    maxLocalCells=100000;
+    maxGlobalCells=1000000; 
+    minRefinementCells=5;
+    maxLoadUnbalance=0.10;
+    nCellsBetweenLevels=3;
+    featureRefinementLevel=0;
+    minSurfaceRefinement=0;
+    maxSurfaceRefinement=0;
+    resolveFeatureAngle=30;
+    insidePointX=0.0;
+    insidePointY=0.0;
+    insidePointZ=0.0;
+    allowFreeStandingZoneFaces=1;
 
+    // Snap controls
+    nSmoothPatch=3;
+    nSolveIter 30;
+    nRelaxIter=5;
+    snapTolarence=2.0;
+    nFeatureSnapIter=10;
+    implicitFeatureSnap=0;
+    explicitFeatureSnap=1;
+    ultiRegionFeatureSnap=0;
+
+    // Add layer controls
+    nSurfaceLayers=3;
+    relativeSizes=1;
+    expansionRatio=1.18;
+    finalLayerThickness=0.3;
+    minThickness=0.1;
+    nGrow=0;
+    featureAngle=60;
+    slipFeatureAngle=30;
+    nSnapRelaxIter=3;
+    nSmoothSurfaceNormals=1;
+    nSmoothNormals=3;
+    nSmoothThickness=10;
+    maxFaceThicknessRatio=0.5;
+    maxThicknessToMedialRatio=0.3;
+    minMedianAxisAngle=90;
+    nBufferCellsNoExtrude=0;
+    nLayerIter=50;
+
+}
