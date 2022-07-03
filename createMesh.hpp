@@ -75,6 +75,13 @@ private:
 
 
     // Mesh Quality Controls
+    int maxNonOrtho, maxBoundarySkewness, maxInternalSkewness;
+    int maxConcave;
+    float minVol, minTetQuality, minArea, minTwist, minDeterminant;
+    float minFaceWeight, minVolRatio, minTriangleTwist;
+    int nSmoothScale;
+    float errorReduction;
+    int relaxedMaxNonOrtho;
 
     // Write Flags
 

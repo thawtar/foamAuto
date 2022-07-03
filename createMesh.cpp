@@ -20,12 +20,12 @@ void blockMesh::writeBoundaries()
     // bottom boundary:z-min (0 1 2 3)
     // front boundary: y-min (4 5 1 0)
     // back boundary : y-max (7 6 2 3)
-    const int left[4]={0,3,7,4};
-    const int right[4]={1,2,6,5};
-    const int top[4]={4,5,6,7};
-    const int bottom[4]={0,1,2,3};
-    const int front[4]={4,5,1,0};
-    const int back[4]={7,6,2,3};
+    //const int left[4]={0,3,7,4};
+    //const int right[4]={1,2,6,5};
+    //const int top[4]={4,5,6,7};
+    //const int bottom[4]={0,1,2,3};
+    //const int front[4]={4,5,1,0};
+    //const int back[4]={7,6,2,3};
     const char*name[6]={"left","right","top","bottom","front","back"};
     int faces[6][4]={{0,3,7,4},{1,2,6,5},{4,5,6,7},{0,1,2,3},{4,5,1,0},{7,6,2,3}};
     blockMeshDict << "boundary\n(\n";
@@ -172,6 +172,7 @@ int blockMesh::writeHeader()
 }\n";
     blockMeshDict << ofheader << endl;
     blockMeshDict << blockMeshHeader << endl;
+    return 0;
 }
 
 blockMesh::~blockMesh()
@@ -208,13 +209,13 @@ snappyHexMesh::snappyHexMesh() // constructor, it will use default values
 
     // Snap controls
     nSmoothPatch=3;
-    nSolveIter 30;
+    nSolveIter=30;
     nRelaxIter=5;
     snapTolarence=2.0;
     nFeatureSnapIter=10;
     implicitFeatureSnap=0;
     explicitFeatureSnap=1;
-    ultiRegionFeatureSnap=0;
+    multiRegionFeatureSnap=0;
 
     // Add layer controls
     nSurfaceLayers=3;
@@ -234,5 +235,22 @@ snappyHexMesh::snappyHexMesh() // constructor, it will use default values
     minMedianAxisAngle=90;
     nBufferCellsNoExtrude=0;
     nLayerIter=50;
+
+    // Mesh Quality controls
+    maxNonOrtho=70; 
+    maxBoundarySkewness=20;
+    maxInternalSkewness=4;
+    maxConcave=80;
+    minVol=1e-10;
+    minTetQuality=1e-20;
+    minArea=-1.0;
+    minTwist=0.05;
+    minDeterminant=0.001;
+    minFaceWeight=0.05;
+    minVolRatio=0.01;
+    minTriangleTwist=-1;
+    nSmoothScale=4;
+    errorReduction=0.75;
+    relaxedMaxNonOrtho=75;
 
 }
