@@ -8,8 +8,9 @@
 
 using namespace std;
 
-
-
+//============================================================================================
+//             blockMesh Functions
+//============================================================================================
 void blockMesh::writeBoundaries()
 {
     // Vertices are counter-clockwise for each boundary face
@@ -120,6 +121,7 @@ void blockMesh::writeEdges()
 // initialize x, y, z vertices of the domain to (0,0,0)
 blockMesh::blockMesh()
 {
+    std::cout << "\nStarting blockMeshDict file creation...\n";
     blockMeshDict.open("blockMeshDict");
     x[0] = 0.0;
     y[0] = 0.0;
@@ -134,6 +136,7 @@ blockMesh::blockMesh()
 
 blockMesh::blockMesh(float x0, float y0, float z0)
 {
+    std::cout << "\nStarting blockMeshDict file creation...\n";
     blockMeshDict.open("blockMeshDict");
     x[0] = x0;
     y[0] = y0;
@@ -190,8 +193,39 @@ void blockMesh::setElements(int ax, int ay, int az)
 }
 
 
+
+
+//============================================================================================
+//             snappyHexMesh Functions
+//============================================================================================
+// Constructor for snappyHexMesh
 snappyHexMesh::snappyHexMesh() // constructor, it will use default values
 {
+    std::cout << "\nStarting snappyHexMeshDict file creation...\n";
+    // Create snappyHexMeshDict file
+    snappyHexMeshDict.open("snappyHexMeshDict");
+    // Free up the snappyText
+    snappyText = "";
+    tempText = "";
+
+    std::string localKeyWords[100] = {"maxLocalCells","maxGlobalCells", "minRefinementCells","minRefinementCells",
+    "maxLoadUnbalance", "nCellsBetweenLevel","featureRefinementLevel" };
+    float localDefaults[100]= { 100000.0,2.0e+6,10.0,0.1,3, 6 };
+    for (int i = 0; i < 6; i++)
+    {
+        keyWords[i] = localKeyWords[i];
+        defaultValues[i] = localDefaults[i];
+    }
+    for (int i = 0; i < 6; i++)
+    {
+        std::cout << keyWords[i] << " :\t";
+        std::cout << defaultValues[i] << std::endl;
+    }
+    // Adjust/Initializa Main steps
+    castellatedMesh = 0;
+    snap = 0;
+    addLayers = 0;
+
     // Castellated mesh controls
     maxLocalCells=100000;
     maxGlobalCells=1000000; 
@@ -253,4 +287,63 @@ snappyHexMesh::snappyHexMesh() // constructor, it will use default values
     errorReduction=0.75;
     relaxedMaxNonOrtho=75;
 
+}
+
+// Destructor for snappyHexMesh
+snappyHexMesh::~snappyHexMesh()
+{ // Clean the messes 
+    // if the blockMeshDict file is still open, close it
+    if (snappyHexMeshDict.is_open())
+        snappyHexMeshDict.close();
+}
+
+
+int snappyHexMesh::writeHeader()
+{
+    string ofheader = "/*--------------------------------*- C++ -*----------------------------------*\\\n \
+| =========                |                                                 | \n \
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           | \n \
+|  \\    /   O peration     | Version:  v2012                                 | \n \
+|   \\  /    A nd           | Website:  www.openfoam.com                      | \n \
+|    \\/     M anipulation  |                                                 | \n \
+\\*---------------------------------------------------------------------------*/ \n \
+";
+    string snappyHexMeshHeader = "FoamFile\n \
+{ \n \
+    version     2.0; \n \
+    format      ascii; \n \
+    class       dictionary;\n \
+    object      snappyHexMeshDict;\n \
+}\n";
+    tempText = "";
+    tempText += ofheader + snappyHexMeshHeader;
+    return 0;
+}
+
+void snappyHexMesh::changeValueFloat(float* variableToBeChanged, float value)
+{
+    *variableToBeChanged = value;
+}
+
+void snappyHexMesh::changeValueInt(int* variableToBeChanged, int value)
+{
+    *variableToBeChanged = value;
+}
+
+void snappyHexMesh::run()
+{
+    writeHeader();
+    askSTL();
+    std::cout << tempText << std::endl;
+}
+
+void snappyHexMesh::inputSTL(std::string name)
+{
+    stl = name;
+}
+
+void snappyHexMesh::askSTL()
+{
+    std::cout << "\nEnter the STL file name:" << std::endl;
+    std::cin >> stl;
 }

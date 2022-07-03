@@ -5,7 +5,7 @@ float x_1, x_2, y_1, y_2, z_1, z_2;
 int nx, ny, nz;
 float lx, ly, lz;
 
-int test()
+int blockTest()
 {
 	blockMesh mesh;
 	mesh.showLogo();
@@ -36,11 +36,17 @@ void ask_data()
 	lz = z_2 - z_1;
 }
 
+void snappyTest()
+{
+	snappyHexMesh shm;
+	shm.run();
+}
 
 int main()
 {
 
-	ask_data();
-	test();
+	//ask_data();
+	//test();
+	snappyTest();
 	return 0;
 }

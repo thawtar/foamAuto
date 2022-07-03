@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <string>
 #ifndef CREATEMESH_H
 #define CREATEMESH_H
 
@@ -42,10 +43,17 @@ public:
 class snappyHexMesh
 {
 private:
-    std::ofstream shmDict; // snappyHexMeshDict file
+    std::ofstream snappyHexMeshDict; // snappyHexMeshDict file
+    std::string snappyText;
+    std::string tempText; // to temporarily store string before adding to snappyText
+    std::string keyWords[100] = { "maxLocalCells","maxGlobalCells", "minRefinementCells","minRefinementCells",
+    "maxLoadUnbalance", "nCellsBetweenLevel","featureRefinementLevel" };
+    float defaultValues[100] = { 100000.0,2.0e+6,10.0,0.1,3, 6 };
     // Parameters used in snappyHexMeshDict file
     int minRef, maxRef; // minimum and maximum refinements
-    char stl[100]; // store STL file name
+    std::string stl; // store STL file name
+    // Main step switches
+    int castellatedMesh, snap, addLayers;
     // Castellated mesh control parameters
     int maxLocalCells, maxGlobalCells, minRefinementCells;
     float maxLoadUnbalance;
@@ -86,11 +94,15 @@ private:
     // Write Flags
 
     float mergeTolerance;
+    void changeValueInt(int* variableToBeChanged, int value);
+    void changeValueFloat(float* variableToBeChanged, float value);
 
 public:
     snappyHexMesh();
     ~snappyHexMesh();
     int writeHeader();
+    void inputSTL(std::string name);
+    void askSTL();
     void searchableBox(char name[100],float xx1, float xx2, float yy1, float yy2,
     float zz1, float zz2);
 
