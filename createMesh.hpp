@@ -56,7 +56,12 @@ private:
     std::string snappyText;
     std::string tempText; // to temporarily store string before adding to snappyText
     std::string keyWords[100];
+    std::string TrueFalse[2];
     float itemValues[100];
+    int mainControls[3];
+    std::string castellatedKeywords[100];
+    float castellatedValues[100];
+    int castellatedIsInt[100];
     int maxItems;
     vector<stlSurface>surfaces; // a vector to dynamically allocate surface refinements
     // Parameters used in snappyHexMeshDict file
@@ -101,6 +106,8 @@ private:
     float errorReduction;
     int relaxedMaxNonOrtho;
 
+    // inline
+    void clearTemp();
     // Write Flags
 
     float mergeTolerance;
@@ -108,6 +115,10 @@ private:
     void changeValueFloat(float* variableToBeChanged, float value);
 	void mergeText();
 	void addTempText(int indx);
+    void writeMainControls();
+    void writeCastellatedControls();
+    void writeSnapControls();
+    void writeLayerControls();
 
 public:
     snappyHexMesh();
