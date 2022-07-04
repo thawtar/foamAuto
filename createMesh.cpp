@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <cstring>
 #include <string>
+#include <vector>
 #include "createMesh.hpp"
 
 using namespace std;
@@ -297,7 +298,6 @@ snappyHexMesh::~snappyHexMesh()
         snappyHexMeshDict.close();
 }
 
-
 int snappyHexMesh::writeHeader()
 {
     string ofheader = "/*--------------------------------*- C++ -*----------------------------------*\\\n \
@@ -346,4 +346,13 @@ void snappyHexMesh::askSTL()
 {
     std::cout << "\nEnter the STL file name:" << std::endl;
     std::cin >> stl;
+}
+
+void snappyHexMesh::mergeText()
+{
+
+}
+void snappyHexMesh::addTempText(int indx)
+{
+
 }

@@ -96,6 +96,8 @@ private:
     float mergeTolerance;
     void changeValueInt(int* variableToBeChanged, int value);
     void changeValueFloat(float* variableToBeChanged, float value);
+	void mergeText();
+	void addTempText(int indx);
 
 public:
     snappyHexMesh();
