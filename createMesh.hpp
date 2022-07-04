@@ -56,14 +56,14 @@ private:
     std::string snappyText;
     std::string tempText; // to temporarily store string before adding to snappyText
     std::string keyWords[100];
-    std::string TrueFalse[2];
+    std::string TrueFalse[2]={"True","False"};
     float itemValues[100];
-    int mainControls[3];
+    int mainControls[3]={1,0,0};
     std::string castellatedKeywords[100];
     float castellatedValues[100];
     int castellatedIsInt[100];
     int maxItems;
-    vector<stlSurface>surfaces; // a vector to dynamically allocate surface refinements
+    std::vector<stlSurface>surfaces; // a vector to dynamically allocate surface refinements
     // Parameters used in snappyHexMeshDict file
     int minRef, maxRef; // minimum and maximum refinements
     std::string stl; // store STL file name

@@ -205,8 +205,8 @@ snappyHexMesh::snappyHexMesh() // constructor, it will use default values
     // Free up the snappyText
     snappyText = "";
     tempText = "";
-    TrueFales[]={"False","True"};
-    mainControls[]={1,0,0}; // castellated True, snap False, layers False
+    //TrueFalse[2]={"False","True"};
+    //mainControls[]={1,0,0}; // castellated True, snap False, layers False
     std::string localKeyWords[100] = {"maxLocalCells","maxGlobalCells", "minRefinementCells","minRefinementCells",
     "maxLoadUnbalance", "nCellsBetweenLevel","featureRefinementLevel" };
     float localDefaults[100]= { 100000.0,2.0e+6,10.0,0.1,3, 6 };
@@ -383,6 +383,6 @@ void snappyHexMesh::writeCastellatedControls()
 {
     clearTemp();
     tempText += "\ncastellatedMeshControls\n{\n\n";
-    
+
 
 }
