@@ -12,12 +12,21 @@ struct boundary
 
 }typedef boundary;
 
+struct stlSurface
+{
+    std::string surfaceName;
+    std::string fileName;
+    int minRefine;
+    int maxRefine;
+}typedef stlSurface;
+
 class blockMesh
 {
 private:
     int nx, ny, nz; // the number of elements in each domain direction
     //FILE* blockmeshdict;
     std::ofstream blockMeshDict;
+    
     float lx, ly, lz; // size of the block mesh domain
     float scale;
     float x[8], y[8], z[8]; // for the vertices of the domain
@@ -46,9 +55,9 @@ private:
     std::ofstream snappyHexMeshDict; // snappyHexMeshDict file
     std::string snappyText;
     std::string tempText; // to temporarily store string before adding to snappyText
-    std::string keyWords[100] = { "maxLocalCells","maxGlobalCells", "minRefinementCells","minRefinementCells",
-    "maxLoadUnbalance", "nCellsBetweenLevel","featureRefinementLevel" };
-    float defaultValues[100] = { 100000.0,2.0e+6,10.0,0.1,3, 6 };
+    std::string keyWords[100];
+    float defaultValues[100];
+    vector<stlSurface>surfaces; // a vector to dynamically allocate surface refinements
     // Parameters used in snappyHexMeshDict file
     int minRef, maxRef; // minimum and maximum refinements
     std::string stl; // store STL file name
@@ -103,7 +112,7 @@ public:
     snappyHexMesh();
     ~snappyHexMesh();
     int writeHeader();
-    void inputSTL(std::string name);
+    void inputSTL(std::string filename, std::string name, int minRef, int maxRef);
     void askSTL();
     void searchableBox(char name[100],float xx1, float xx2, float yy1, float yy2,
     float zz1, float zz2);
