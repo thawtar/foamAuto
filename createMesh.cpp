@@ -193,9 +193,6 @@ void blockMesh::setElements(int ax, int ay, int az)
     nz = az;
 }
 
-
-
-
 //============================================================================================
 //             snappyHexMesh Functions
 //============================================================================================
@@ -215,13 +212,14 @@ snappyHexMesh::snappyHexMesh() // constructor, it will use default values
     for (int i = 0; i < 6; i++)
     {
         keyWords[i] = localKeyWords[i];
-        defaultValues[i] = localDefaults[i];
+        itemValues[i] = localDefaults[i];
     }
     for (int i = 0; i < 6; i++)
     {
         std::cout << keyWords[i] << " :\t";
         std::cout << defaultValues[i] << std::endl;
     }
+    maxItems = 6;
     // Adjust/Initializa Main steps
     castellatedMesh = 0;
     snap = 0;
@@ -350,9 +348,17 @@ void snappyHexMesh::askSTL()
 
 void snappyHexMesh::mergeText()
 {
-
+    snappyText += tempText;
+    tempText = "";
 }
 void snappyHexMesh::addTempText(int indx)
 {
+    if (indx < maxItems)
+        tempText += keyWords[indx] + "\t" + std::to_string(itemValues[indx]);
+    else
+    {
+        std::cout << "\nError. Trying to read array over the limits. Exiting...\n";
+        exit(-1);
+    }
 
 }
