@@ -334,7 +334,8 @@ void snappyHexMesh::run()
 {
     writeHeader();
     askSTL();
-    std::cout << tempText << std::endl;
+    writeCastellatedControls();
+    //std::cout << tempText << std::endl;
 }
 
 void snappyHexMesh::inputSTL(std::string name)
@@ -383,6 +384,11 @@ void snappyHexMesh::writeCastellatedControls()
 {
     clearTemp();
     tempText += "\ncastellatedMeshControls\n{\n\n";
-
+    for(int i=0;i<4;i++) 
+    {
+        tempText += "\t"+keyWords[i]+"\n";
+        tempText += "\t"+itemValues[i]+"\n";
+    }
+    std::cout<< tempText << std::endl;
 
 }
