@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <vector>
 #ifndef CREATEMESH_H
 #define CREATEMESH_H
 
@@ -56,9 +57,9 @@ private:
     std::string snappyText;
     std::string tempText; // to temporarily store string before adding to snappyText
     std::string keyWords[100];
-    std::string TrueFalse[2]={"True","False"};
+    std::string TrueFalse[2];//={"True","False"};
     float itemValues[100];
-    int mainControls[3]={1,0,0};
+    int mainControls[3];//={1,0,0};
     std::string castellatedKeywords[100];
     float castellatedValues[100];
     int castellatedIsInt[100];
@@ -119,11 +120,13 @@ private:
     void writeCastellatedControls();
     void writeSnapControls();
     void writeLayerControls();
+    int writeHeader();
+    void writeSHMFile();
 
 public:
     snappyHexMesh();
     ~snappyHexMesh();
-    int writeHeader();
+    
     void inputSTL(std::string filename, std::string name, int minRef, int maxRef);
     void askSTL();
     void searchableBox(char name[100],float xx1, float xx2, float yy1, float yy2,

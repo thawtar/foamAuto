@@ -133,6 +133,7 @@ blockMesh::blockMesh()
     nx = 1;
     ny = 1;
     nz = 1;
+    scale = 1.0;
 }
 
 blockMesh::blockMesh(float x0, float y0, float z0)
@@ -205,8 +206,10 @@ snappyHexMesh::snappyHexMesh() // constructor, it will use default values
     // Free up the snappyText
     snappyText = "";
     tempText = "";
-    //TrueFalse[2]={"False","True"};
-    //mainControls[]={1,0,0}; // castellated True, snap False, layers False
+    TrueFalse[0]="False"; TrueFalse[1]="True";
+    mainControls[0]=1;
+    mainControls[1]=0;
+    mainControls[2]=0;//{1,0,0}; // castellated True, snap False, layers False
     std::string localKeyWords[100] = {"maxLocalCells","maxGlobalCells", "minRefinementCells","minRefinementCells",
     "maxLoadUnbalance", "nCellsBetweenLevel","featureRefinementLevel" };
     float localDefaults[100]= { 100000.0,2.0e+6,10.0,0.1,3, 6 };
@@ -218,7 +221,7 @@ snappyHexMesh::snappyHexMesh() // constructor, it will use default values
     for (int i = 0; i < 6; i++)
     {
         std::cout << keyWords[i] << " :\t";
-        std::cout << defaultValues[i] << std::endl;
+        std::cout << itemValues[i] << std::endl;
     }
     maxItems = 6;
     // Adjust/Initializa Main steps
@@ -333,14 +336,17 @@ void snappyHexMesh::changeValueInt(int* variableToBeChanged, int value)
 void snappyHexMesh::run()
 {
     writeHeader();
-    askSTL();
+    //askSTL();
+    writeMainControls();
     writeCastellatedControls();
+    writeSHMFile();
     //std::cout << tempText << std::endl;
 }
 
-void snappyHexMesh::inputSTL(std::string name)
+void snappyHexMesh::inputSTL(std::string filename, std::string name, int minRef, int maxRef)
 {
-    stl = name;
+    stl = filename;
+
 }
 
 void snappyHexMesh::askSTL()
@@ -357,7 +363,7 @@ void snappyHexMesh::mergeText()
 void snappyHexMesh::addTempText(int indx)
 {
     if (indx < maxItems)
-        tempText += keyWords[indx] + "\t" + std::to_string(itemValues[indx]);
+        tempText += keyWords[indx] + "\t\t" + std::to_string(itemValues[indx])+"\n";
     else
     {
         std::cout << "\nError. Trying to read array over the limits. Exiting...\n";
@@ -384,11 +390,23 @@ void snappyHexMesh::writeCastellatedControls()
 {
     clearTemp();
     tempText += "\ncastellatedMeshControls\n{\n\n";
-    for(int i=0;i<4;i++) 
+    /*for(int i=0;i<4;i++) 
     {
-        tempText += "\t"+keyWords[i]+"\n";
-        tempText += "\t"+itemValues[i]+"\n";
-    }
-    std::cout<< tempText << std::endl;
+        tempText += "\t"+keyWords[i];
+        tempText += "\t"+std::to_string( itemValues[i])+"\n";
+    }*/
+    for(int i=0;i<4;i++)
+        addTempText(i);
+    tempText += "\n}\n";
+    mergeText(); // add tempText to snappyText
+    std::cout<< snappyText<< std::endl;
+
+}
+
+void snappyHexMesh::writeSHMFile()
+{
+    if (!snappyHexMeshDict.is_open())
+        snappyHexMeshDict.open("snappyHexMeshDict");
+    snappyHexMeshDict<<snappyText<< std::endl;
 
 }
