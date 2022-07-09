@@ -118,6 +118,7 @@ private:
     void clearTemp();
     void addItem2(item anItem);
     void addItem(std::string name, float value, int isInt);
+    void addTrueFalseItem(std::string name, int value);
     // Write Flags
 
     float mergeTolerance;
@@ -129,8 +130,10 @@ private:
     void writeCastellatedControls();
     void writeSnapControls();
     void writeLayerControls();
+    void writeMeshQualityControls();
     int writeHeader();
     void writeSHMFile();
+    void showText();
 
 public:
     snappyHexMesh();

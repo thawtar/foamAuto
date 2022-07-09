@@ -206,8 +206,8 @@ snappyHexMesh::snappyHexMesh() // constructor, it will use default values
     // Free up the snappyText
     snappyText = "";
     tempText = "";
-    TrueFalse[0] = "False";
-    TrueFalse[1] = "True";
+    TrueFalse[0] = "false";
+    TrueFalse[1] = "true";
     // Adjust/Initializa Main steps
     castellatedMesh = 0;
     snap = 0;
@@ -323,6 +323,8 @@ void snappyHexMesh::run()
     //askSTL();
     writeMainControls();
     writeCastellatedControls();
+    writeSnapControls();
+    showText();
     writeSHMFile();
     //std::cout << tempText << std::endl;
 }
@@ -365,21 +367,56 @@ void snappyHexMesh::writeMainControls()
 {
     std::string mainWords[3]={"castellatedMesh","snap","addLayers"};
     clearTemp();
-    tempText += "castellatedMesh" + "\t\t" + TrueFalse[castellatedMesh];
-    tempText += "snap" + "\t\t" + TrueFalse[snap];
-    tempText += "addLayers" + "\t\t" + TrueFalse[addLayers];
+    tempText += "castellatedMesh\t\t" + TrueFalse[castellatedMesh]+";\n";
+    tempText += "snap\t\t\t" + TrueFalse[snap]+";\n";
+    tempText += "addLayers\t\t" + TrueFalse[addLayers]+";\n";
     snappyText += tempText;
 }
 
 void snappyHexMesh::writeCastellatedControls()
 {
     clearTemp();
-    tempText += "\ncastellatedMeshControls\n{\n\n";
-    tempText += "maxLocalCells\t\t" + std::to_string(maxLocalCells)+;
+    tempText += "\ncastellatedMeshControls\n{\n";
+    //tempText += "maxLocalCells\t\t" + std::to_string(maxLocalCells)+"\n";
+    addItem("maxLocalCells", maxLocalCells,1);
+    addItem("maxGlobalCells",maxGlobalCells,1);
+    addItem("minRefinementCells",minRefinementCells,1);
+    addItem("maxLoadUnbalance",maxLoadUnbalance,0);
+    addItem("nCellsBetweenLevels",nCellsBetweenLevels,1);
+    addItem("resolveFeatureAngle", resolveFeatureAngle,1);
+    tempText += "insidePoint ("+ std::to_string(insidePointX)+" "+std::to_string(insidePointY);
+    tempText += " "+std::to_string(insidePointZ)+");\n";
     tempText += "\n}\n";
     mergeText(); // add tempText to snappyText
-    std::cout<< snappyText<< std::endl;
+    //std::cout<< snappyText<< std::endl;
+}
 
+void snappyHexMesh::showText()
+{
+    std::cout<< snappyText<< std::endl;
+}
+
+void snappyHexMesh::writeSnapControls()
+{
+    clearTemp();
+    tempText += "\nsnapControls\n{\n";
+    addItem("nSmoothPatch", nSmoothPatch,1);
+    addItem("tolerance", snapTolarence,0);
+    addItem("nSolverIter", nSolveIter,1);
+    addItem("nRelaxIter", nRelaxIter,1);
+    addItem("nFeatureSnapIter", nFeatureSnapIter,1);
+    addTrueFalseItem("implicitFeatureSnap",implicitFeatureSnap);
+    addTrueFalseItem("explicitFeatureSnap",explicitFeatureSnap);
+    addTrueFalseItem("multiRegionFeatureSnap",multiRegionFeatureSnap);
+    tempText += "\n}\n";
+    mergeText(); // add tempText to snappyText
+    //std::cout<< snappyText<< std::endl;
+
+}
+
+void snappyHexMesh::addTrueFalseItem(std::string name, int value)
+{
+    tempText += name + "\t" + TrueFalse[value] + ";\n";
 }
 
 void snappyHexMesh::writeSHMFile()
@@ -390,20 +427,20 @@ void snappyHexMesh::writeSHMFile()
 
 }
 
-void addItem2(item anItem)
+void snappyHexMesh::addItem2(item anItem)
 {
     if (anItem.isInt)
     {
-        tempText += anItem.name + "\t\t" + std::to_string((int)(anItem.value)) + "\n";
+        tempText += anItem.name + "\t" + std::to_string((int)(anItem.value)) + ";\n";
     }
     else
-        tempText += anItem.name + "\t\t" + std::to_string(anItem.value) + "\n";
+        tempText += anItem.name + "\t" + std::to_string(anItem.value) + ";\n";
 }
 
-void addItem(std::string name, float value, int isInt)
+void snappyHexMesh::addItem(std::string name, float value, int isInt)
 {
     if(isInt)
-        tempText += name + "\t\t" + std::to_string((int)(value)) + "\n";
+        tempText += name + "\t" + std::to_string((int)(value)) + ";\n";
     else
-        tempText += name + "\t\t" + std::to_string(value) + "\n";
+        tempText += name + "\t" + std::to_string(value) + ";\n";
 }
