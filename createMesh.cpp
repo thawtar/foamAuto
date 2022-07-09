@@ -206,24 +206,8 @@ snappyHexMesh::snappyHexMesh() // constructor, it will use default values
     // Free up the snappyText
     snappyText = "";
     tempText = "";
-    TrueFalse[0]="False"; TrueFalse[1]="True";
-    mainControls[0]=1;
-    mainControls[1]=0;
-    mainControls[2]=0;//{1,0,0}; // castellated True, snap False, layers False
-    std::string localKeyWords[100] = {"maxLocalCells","maxGlobalCells", "minRefinementCells","minRefinementCells",
-    "maxLoadUnbalance", "nCellsBetweenLevel","featureRefinementLevel" };
-    float localDefaults[100]= { 100000.0,2.0e+6,10.0,0.1,3, 6 };
-    for (int i = 0; i < 6; i++)
-    {
-        keyWords[i] = localKeyWords[i];
-        itemValues[i] = localDefaults[i];
-    }
-    for (int i = 0; i < 6; i++)
-    {
-        std::cout << keyWords[i] << " :\t";
-        std::cout << itemValues[i] << std::endl;
-    }
-    maxItems = 6;
+    TrueFalse[0] = "False";
+    TrueFalse[1] = "True";
     // Adjust/Initializa Main steps
     castellatedMesh = 0;
     snap = 0;
@@ -380,9 +364,10 @@ inline void snappyHexMesh::clearTemp()
 void snappyHexMesh::writeMainControls()
 {
     std::string mainWords[3]={"castellatedMesh","snap","addLayers"};
-    tempText = "";
-    for(int i=0;i<3;i++)
-        tempText += mainWords[i]+"\t"+TrueFalse[mainControls[i]]+";\n";
+    clearTemp();
+    tempText += "castellatedMesh" + "\t\t" + TrueFalse[castellatedMesh];
+    tempText += "snap" + "\t\t" + TrueFalse[snap];
+    tempText += "addLayers" + "\t\t" + TrueFalse[addLayers];
     snappyText += tempText;
 }
 
@@ -390,13 +375,7 @@ void snappyHexMesh::writeCastellatedControls()
 {
     clearTemp();
     tempText += "\ncastellatedMeshControls\n{\n\n";
-    /*for(int i=0;i<4;i++) 
-    {
-        tempText += "\t"+keyWords[i];
-        tempText += "\t"+std::to_string( itemValues[i])+"\n";
-    }*/
-    for(int i=0;i<4;i++)
-        addTempText(i);
+    tempText += "maxLocalCells\t\t" + std::to_string(maxLocalCells)+;
     tempText += "\n}\n";
     mergeText(); // add tempText to snappyText
     std::cout<< snappyText<< std::endl;
@@ -409,4 +388,22 @@ void snappyHexMesh::writeSHMFile()
         snappyHexMeshDict.open("snappyHexMeshDict");
     snappyHexMeshDict<<snappyText<< std::endl;
 
+}
+
+void addItem2(item anItem)
+{
+    if (anItem.isInt)
+    {
+        tempText += anItem.name + "\t\t" + std::to_string((int)(anItem.value)) + "\n";
+    }
+    else
+        tempText += anItem.name + "\t\t" + std::to_string(anItem.value) + "\n";
+}
+
+void addItem(std::string name, float value, int isInt)
+{
+    if(isInt)
+        tempText += name + "\t\t" + std::to_string((int)(value)) + "\n";
+    else
+        tempText += name + "\t\t" + std::to_string(value) + "\n";
 }

@@ -5,6 +5,13 @@
 #ifndef CREATEMESH_H
 #define CREATEMESH_H
 
+struct item
+{
+    std::string name;
+    float value;
+    int isInt; // to store whether the value is integer or not
+};
+
 struct boundary
 {
     char name[20];
@@ -109,6 +116,8 @@ private:
 
     // inline
     void clearTemp();
+    void addItem2(item anItem);
+    void addItem(std::string name, float value, int isInt);
     // Write Flags
 
     float mergeTolerance;
