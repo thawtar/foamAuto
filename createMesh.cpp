@@ -320,6 +320,10 @@ void snappyHexMesh::changeValueInt(int* variableToBeChanged, int value)
 void snappyHexMesh::run()
 {
     writeHeader();
+    addSTL("stl1.stl", "stl", 0, 1, 3);
+    addSTL("stl2.stl", "stl2", 1, 2, 5);
+    addSTL("stl3.stl", "stl3", 1, 3, 3);
+    printMultipleSTLs();
     //askSTL();
     writeMainControls();
     writeCastellatedControls();
@@ -331,16 +335,37 @@ void snappyHexMesh::run()
     //std::cout << tempText << std::endl;
 }
 
-void snappyHexMesh::inputSTL(std::string filename, std::string name, int minRef, int maxRef)
+void snappyHexMesh::addSTL(std::string filename, std::string name, int minRef, int maxRef, int nLayers)
 {
     stl = filename;
-
+    stlSurface aSurface;
+    aSurface.fileName = filename;
+    aSurface.surfaceName = name;
+    aSurface.minRefine = minRef;
+    aSurface.maxRefine = maxRef;
+    aSurface.nSurfaceLayers = nLayers;
+    surfaces.push_back(aSurface);
 }
 
 void snappyHexMesh::askSTL()
 {
     std::cout << "\nEnter the STL file name:" << std::endl;
     std::cin >> stl;
+}
+
+void snappyHexMesh::printSTL(stlSurface aSurface)
+{
+    std::cout << "\n" << aSurface.fileName << "\n" << aSurface.surfaceName << "\n"
+        << "Refinement (" << aSurface.minRefine << " " << aSurface.maxRefine << ")\n";
+    std::cout << "Layers: " << aSurface.nSurfaceLayers << std::endl;
+}
+
+void snappyHexMesh::printMultipleSTLs()
+{
+    for (auto i = surfaces.begin(); i != surfaces.end(); ++i)
+    {
+        printSTL(*i);
+    }
 }
 
 void snappyHexMesh::mergeText()
@@ -369,9 +394,9 @@ void snappyHexMesh::writeMainControls()
 {
     std::string mainWords[3]={"castellatedMesh","snap","addLayers"};
     clearTemp();
-    tempText += "castellatedMesh\t\t" + TrueFalse[castellatedMesh]+";\n";
-    tempText += "snap\t\t\t" + TrueFalse[snap]+";\n";
-    tempText += "addLayers\t\t" + TrueFalse[addLayers]+";\n";
+    addTrueFalseItem("castellatedMesh", 1);
+    addTrueFalseItem("snap", 0);
+    addTrueFalseItem("addLayers", 0);
     snappyText += tempText;
 }
 

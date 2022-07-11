@@ -26,6 +26,7 @@ struct stlSurface
     std::string fileName;
     int minRefine;
     int maxRefine;
+    int nSurfaceLayers;
 }typedef stlSurface;
 
 class blockMesh
@@ -119,6 +120,10 @@ private:
     void addItem2(item anItem);
     void addItem(std::string name, float value, int isInt);
     void addTrueFalseItem(std::string name, int value);
+    
+    void addSTL(std::string filename, std::string name, int minRef, int maxRef, int nLayers);
+    void printSTL(stlSurface aSurface);
+    void printMultipleSTLs();
     // Write Flags
 
     float mergeTolerance;
@@ -139,7 +144,7 @@ public:
     snappyHexMesh();
     ~snappyHexMesh();
     
-    void inputSTL(std::string filename, std::string name, int minRef, int maxRef);
+    
     void askSTL();
     void searchableBox(char name[100],float xx1, float xx2, float yy1, float yy2,
     float zz1, float zz2);
