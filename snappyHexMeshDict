@@ -12,9 +12,9 @@
      class       dictionary;
      object      snappyHexMeshDict;
  }
-castellatedMesh		false;
-snap			false;
-addLayers		false;
+castellatedMesh	true;
+snap	false;
+addLayers	false;
 
 castellatedMeshControls
 {
