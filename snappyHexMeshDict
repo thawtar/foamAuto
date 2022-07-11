@@ -41,3 +41,43 @@ multiRegionFeatureSnap	false;
 
 }
 
+addLayerControls
+{
+relativeSizes	true;
+expansinoRatio	1.180000;
+finalLayerThickness	0.300000;
+minThickness	0.100000;
+nGrow	1;
+featureAngle	60;
+slipFeatureAngle	30;
+nRelaxIter	5;
+nSmoothSurfaceNormals	1;
+nSmoothNormals	3;
+nSmoothThickness	10;
+maxFaceThicknessRatio	0.500000;
+maxThicknessToMedialRatio	0.300000;
+minMedianAxisAngle	90;
+nBufferCellsNoExtrude	0;
+nLayerIter	50;
+
+}
+
+meshQualityControls
+{
+maxNonOrtho	70;
+maxBoundarySkewness	20;
+maxInternalSkewness	4;
+maxConcave	80;
+minVol	0.000000;
+minTetQuality	0.000000;
+minArea	-1;
+minTwist	0.050000;
+minDeterminant	0.001000;
+minFaceWeight	0.050000;
+minVolRatio	0.010000;
+minTriangleTwist	-1.000000;
+nSmoothScale	4;
+errorReduction	0.750000;
+
+}
+

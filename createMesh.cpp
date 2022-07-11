@@ -324,6 +324,8 @@ void snappyHexMesh::run()
     writeMainControls();
     writeCastellatedControls();
     writeSnapControls();
+    writeLayerControls();
+    writeMeshQualityControls();
     showText();
     writeSHMFile();
     //std::cout << tempText << std::endl;
@@ -411,8 +413,30 @@ void snappyHexMesh::writeSnapControls()
     tempText += "\n}\n";
     mergeText(); // add tempText to snappyText
     //std::cout<< snappyText<< std::endl;
-
 }
+
+void snappyHexMesh::writeMeshQualityControls()
+{
+    clearTemp();
+    tempText += "\nmeshQualityControls\n{\n";
+    addItem("maxNonOrtho", maxNonOrtho,1);
+    addItem("maxBoundarySkewness", maxBoundarySkewness ,1);
+    addItem("maxInternalSkewness", maxInternalSkewness ,1);
+    addItem("maxConcave", maxConcave ,1);
+    addItem("minVol",minVol ,0);
+    addItem("minTetQuality",minTetQuality ,0);
+    addItem("minArea",minArea ,1);
+    addItem("minTwist", minTwist,0);
+    addItem("minDeterminant", minDeterminant ,0);
+    addItem("minFaceWeight", minFaceWeight ,0);
+    addItem("minVolRatio", minVolRatio,0);
+    addItem("minTriangleTwist", minTriangleTwist,0);
+    addItem("nSmoothScale", nSmoothScale,1);
+    addItem("errorReduction", errorReduction,0);
+    tempText += "\n}\n";
+    mergeText(); // add tempText to snappyText
+}
+
 
 void snappyHexMesh::writeLayerControls()
 {
@@ -426,6 +450,16 @@ void snappyHexMesh::writeLayerControls()
     addItem("featureAngle", featureAngle,1);
     addItem("slipFeatureAngle", slipFeatureAngle,1);
     addItem("nRelaxIter", nRelaxIter,1);
+    addItem("nSmoothSurfaceNormals", nSmoothSurfaceNormals,1);
+    addItem("nSmoothNormals", nSmoothNormals,1);
+    addItem("nSmoothThickness", nSmoothThickness,1);
+    addItem("maxFaceThicknessRatio", maxFaceThicknessRatio,0);
+    addItem("maxThicknessToMedialRatio",maxThicknessToMedialRatio ,0);
+    addItem("minMedianAxisAngle",minMedianAxisAngle ,1);
+    addItem("nBufferCellsNoExtrude", nBufferCellsNoExtrude ,1);
+    addItem("nLayerIter", nLayerIter ,1);
+    tempText += "\n}\n";
+    mergeText(); // add tempText to snappyText
 }
 
 void snappyHexMesh::addTrueFalseItem(std::string name, int value)
