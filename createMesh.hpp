@@ -139,6 +139,7 @@ private:
     int writeHeader();
     void writeSHMFile();
     void showText();
+	void writeSTL(stlSurface stl);
 
 public:
     snappyHexMesh();

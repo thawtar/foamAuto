@@ -368,6 +368,12 @@ void snappyHexMesh::printMultipleSTLs()
     }
 }
 
+void snappyHexMesh::writeSTL(stlSurface stl)
+{
+	clearTemp();
+	tempText += stl.fileName;
+}
+
 void snappyHexMesh::mergeText()
 {
     snappyText += tempText;
