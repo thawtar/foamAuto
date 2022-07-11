@@ -414,6 +414,20 @@ void snappyHexMesh::writeSnapControls()
 
 }
 
+void snappyHexMesh::writeLayerControls()
+{
+    clearTemp();
+    tempText += "\naddLayerControls\n{\n";
+    addTrueFalseItem("relativeSizes",relativeSizes);
+    addItem("expansinoRatio", expansionRatio,0);
+    addItem("finalLayerThickness", finalLayerThickness,0);
+    addItem("minThickness", minThickness,0);
+    addItem("nGrow", expansionRatio,1);
+    addItem("featureAngle", featureAngle,1);
+    addItem("slipFeatureAngle", slipFeatureAngle,1);
+    addItem("nRelaxIter", nRelaxIter,1);
+}
+
 void snappyHexMesh::addTrueFalseItem(std::string name, int value)
 {
     tempText += name + "\t" + TrueFalse[value] + ";\n";
