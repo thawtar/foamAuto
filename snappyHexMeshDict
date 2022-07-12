@@ -16,6 +16,31 @@ castellatedMesh	true;
 snap	false;
 addLayers	false;
 
+geometry
+{
+
+stl1.stl{
+type triSurfaceMesh;
+file "stl1.stl";
+}
+
+stl2.stl{
+type triSurfaceMesh;
+file "stl2.stl";
+}
+
+stl3.stl{
+type triSurfaceMesh;
+file "stl3.stl";
+}
+
+stl3.stl{
+type triSurfaceMesh;
+file "stl3.stl";
+}
+
+};
+
 castellatedMeshControls
 {
 maxLocalCells	100000;
@@ -44,6 +69,23 @@ multiRegionFeatureSnap	false;
 addLayerControls
 {
 relativeSizes	true;
+
+layers
+{
+"stl"
+{
+nSurfaceLayers 3;
+}
+"stl2"
+{
+nSurfaceLayers 5;
+}
+"stl3"
+{
+nSurfaceLayers 3;
+}
+
+}
 expansinoRatio	1.180000;
 finalLayerThickness	0.300000;
 minThickness	0.100000;
@@ -80,4 +122,9 @@ nSmoothScale	4;
 errorReduction	0.750000;
 
 }
+
+writeFlags
+(
+);
+mergeTolerance	0.000001;
 
