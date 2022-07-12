@@ -368,10 +368,37 @@ void snappyHexMesh::printMultipleSTLs()
     }
 }
 
-void snappyHexMesh::writeSTL(stlSurface stl)
+void snappyHexMesh::writeGeometry()
 {
 	clearTemp();
-	tempText += stl.fileName;
+	tempText += "\ngeometry\n{\n";
+	for (auto i = surfaces.begin(); i != surfaces.end(); ++i)
+		writeSTL(*i);
+	tempText += "\n};\n";
+	snappyText += tempText;
+}
+
+void snappyHexMesh::writeLayers()
+{
+	tempText += "\nlayers\n{\n";
+	for (auto i = surfaces.begin(); i != surfaces.end(); ++i)
+	{
+		if ((*i).nSurfaceLayers > 0)
+		{
+			tempText += "\"" + (*i).surfaceName + "\"\n{\n";
+			tempText += "nSurfaceLayers " + std::to_string((*i).nSurfaceLayers) + ";\n}\n";
+		}
+	}
+	tempText += "\n}\n";
+	//snappyText += tempText;
+}
+
+void snappyHexMesh::writeSTL(stlSurface stl)
+{
+	
+	tempText += "\n" + stl.fileName + "{\ntype triSurfaceMesh;\nfile ";
+	tempText+= "\""+stl.fileName+"\";\n}\n";
+	snappyText += tempText;
 }
 
 void snappyHexMesh::mergeText()
@@ -474,6 +501,7 @@ void snappyHexMesh::writeLayerControls()
     clearTemp();
     tempText += "\naddLayerControls\n{\n";
     addTrueFalseItem("relativeSizes",relativeSizes);
+	writeLayers();
     addItem("expansinoRatio", expansionRatio,0);
     addItem("finalLayerThickness", finalLayerThickness,0);
     addItem("minThickness", minThickness,0);

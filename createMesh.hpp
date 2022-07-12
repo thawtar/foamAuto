@@ -132,6 +132,7 @@ private:
 	void mergeText();
 	void addTempText(int indx);
     void writeMainControls();
+	void writeGeometry();
     void writeCastellatedControls();
     void writeSnapControls();
     void writeLayerControls();
@@ -140,6 +141,7 @@ private:
     void writeSHMFile();
     void showText();
 	void writeSTL(stlSurface stl);
+	void writeLayers();
 
 public:
     snappyHexMesh();
