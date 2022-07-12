@@ -142,6 +142,8 @@ private:
     void showText();
 	void writeSTL(stlSurface stl);
 	void writeLayers();
+	void writeFlags();
+	void writeMergeTolerance();
 
 public:
     snappyHexMesh();

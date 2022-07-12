@@ -274,6 +274,7 @@ snappyHexMesh::snappyHexMesh() // constructor, it will use default values
     errorReduction=0.75;
     relaxedMaxNonOrtho=75;
 
+	mergeTolerance = 1e-6;
 }
 
 // Destructor for snappyHexMesh
@@ -317,23 +318,6 @@ void snappyHexMesh::changeValueInt(int* variableToBeChanged, int value)
     *variableToBeChanged = value;
 }
 
-void snappyHexMesh::run()
-{
-    writeHeader();
-    addSTL("stl1.stl", "stl", 0, 1, 3);
-    addSTL("stl2.stl", "stl2", 1, 2, 5);
-    addSTL("stl3.stl", "stl3", 1, 3, 3);
-    printMultipleSTLs();
-    //askSTL();
-    writeMainControls();
-    writeCastellatedControls();
-    writeSnapControls();
-    writeLayerControls();
-    writeMeshQualityControls();
-    showText();
-    writeSHMFile();
-    //std::cout << tempText << std::endl;
-}
 
 void snappyHexMesh::addSTL(std::string filename, std::string name, int minRef, int maxRef, int nLayers)
 {
@@ -371,7 +355,7 @@ void snappyHexMesh::printMultipleSTLs()
 void snappyHexMesh::writeGeometry()
 {
 	clearTemp();
-	tempText += "\ngeometry\n{\n";
+	snappyText += "\ngeometry\n{\n";
 	for (auto i = surfaces.begin(); i != surfaces.end(); ++i)
 		writeSTL(*i);
 	tempText += "\n};\n";
@@ -395,7 +379,7 @@ void snappyHexMesh::writeLayers()
 
 void snappyHexMesh::writeSTL(stlSurface stl)
 {
-	
+	clearTemp();
 	tempText += "\n" + stl.fileName + "{\ntype triSurfaceMesh;\nfile ";
 	tempText+= "\""+stl.fileName+"\";\n}\n";
 	snappyText += tempText;
@@ -550,4 +534,39 @@ void snappyHexMesh::addItem(std::string name, float value, int isInt)
         tempText += name + "\t" + std::to_string((int)(value)) + ";\n";
     else
         tempText += name + "\t" + std::to_string(value) + ";\n";
+}
+
+void snappyHexMesh::writeFlags()
+{
+	clearTemp();
+	tempText += "\nwriteFlags\n(\n);\n";
+	snappyText += tempText;
+}
+
+void snappyHexMesh::writeMergeTolerance()
+{
+	clearTemp();
+	addItem("mergeTolerance", mergeTolerance, 0);
+	snappyText += tempText;
+}
+
+void snappyHexMesh::run()
+{
+	writeHeader();
+	addSTL("stl1.stl", "stl", 0, 1, 3);
+	addSTL("stl2.stl", "stl2", 1, 2, 5);
+	addSTL("stl3.stl", "stl3", 1, 3, 3);
+	printMultipleSTLs();
+	//askSTL();
+	writeMainControls();
+	writeGeometry();
+	writeCastellatedControls();
+	writeSnapControls();
+	writeLayerControls();
+	writeMeshQualityControls();
+	writeFlags();
+	writeMergeTolerance();
+	showText();
+	writeSHMFile();
+	//std::cout << tempText << std::endl;
 }
