@@ -52,18 +52,25 @@ class boundaryConditions
 {
 private:
 	std::ofstream bcfile;
+	std::string bcText;
+	std::string tempText;
 	int boundaryCount;
 	int bcClass; // whether it is volVectorField, volScalarField
 	std::string objectType;
 	std::string bcFileName; // name of the boundary condition file
 	std::vector<boundaryCondition> bcs;
+	void addBoundaryCondition(boundaryCondition bc);
+	void addItem(std::string name, float value, int isInt);
+	void writeHeader();
+	void clearTemp();
+
 public:
 	boundaryConditions();
 	boundaryConditions(int bcCount);
 	boundaryConditions(std::string filename);
 	boundaryConditions(std::string filename, int bcCount);
 	~boundaryConditions();
-	void addBoundaryCondition();
+	
 
 };
 
@@ -85,6 +92,7 @@ public:
 	createcase(); // constructor
 	createcase(std::string name);
 	~createcase(); // destructor
+	void createDirectory();
 	void run();
 
 };
