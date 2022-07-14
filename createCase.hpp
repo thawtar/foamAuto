@@ -43,18 +43,28 @@ struct boundaryCondition
 	int indx;
 	int bcType; // type of boundary condition. fixedValue, zeroGradient or symmetry
 	int valueType; // type of value: scalar or vector
-
-	
-
+	float valueX, valueY, valueZ; // in case of defining vector values
+	float scalarValue; // in case of defining scalar values
 };
 
 // It is necessary to create a new instance of this class for each boundary condition file
 class boundaryConditions
 {
 private:
+	std::ofstream bcfile;
 	int boundaryCount;
 	int bcClass; // whether it is volVectorField, volScalarField
 	std::string objectType;
+	std::string bcFileName; // name of the boundary condition file
+	std::vector<boundaryCondition> bcs;
+public:
+	boundaryConditions();
+	boundaryConditions(int bcCount);
+	boundaryConditions(std::string filename);
+	boundaryConditions(std::string filename, int bcCount);
+	~boundaryConditions();
+	void addBoundaryCondition();
+
 };
 
 class constants
