@@ -22,12 +22,6 @@ void blockMesh::writeBoundaries()
     // bottom boundary:z-min (0 1 2 3)
     // front boundary: y-min (4 5 1 0)
     // back boundary : y-max (7 6 2 3)
-    //const int left[4]={0,3,7,4};
-    //const int right[4]={1,2,6,5};
-    //const int top[4]={4,5,6,7};
-    //const int bottom[4]={0,1,2,3};
-    //const int front[4]={4,5,1,0};
-    //const int back[4]={7,6,2,3};
     const char*name[6]={"left","right","top","bottom","front","back"};
     int faces[6][4]={{0,3,7,4},{1,2,6,5},{4,5,6,7},{0,1,2,3},{4,5,1,0},{7,6,2,3}};
     blockMeshDict << "boundary\n(\n";
