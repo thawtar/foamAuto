@@ -9,17 +9,23 @@
 // inputs may include solver name, turbulence on/off, free-surface on/off
 
 // It is convenient to define values of types like fixedValue, zeroGradient or symmetry
-#define empty -1;
-#define fixedValue 0;
-#define zeroGradient 1;
-#define symmetry 2;
-#define noSlip 3;
-#define fixedFluxPressure 4;
+#define empty 0
+#define fixedValue 1
+#define zeroGradient 2
+#define symmetry 3
+#define noSlip 4
+#define fixedFluxPressure 5
 
 // types
-#define uniform 0;
-#define Scalar 0;
-#define Vector 1;
+#define uniform 0
+#define Scalar 0
+#define Vector 1
+
+// field types for boundary conditions
+#define volScalarField 0
+#define volVectorField 1
+#define surfaceScalarField 2
+#define surfaceVectorField 3
 
 
 struct dimensions
@@ -61,6 +67,7 @@ private:
 	std::vector<boundaryCondition> bcs;
 	void addBoundaryCondition(boundaryCondition bc);
 	void addItem(std::string name, float value, int isInt);
+	void addItem(std::string str1, std::string str2);
 	void writeHeader();
 	void clearTemp();
 
@@ -87,7 +94,7 @@ class createcase
 {
 private:
 	std::string casename;
-	std::string path;
+	std::string casepath;
 public:
 	createcase(); // constructor
 	createcase(std::string name);

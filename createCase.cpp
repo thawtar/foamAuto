@@ -3,6 +3,7 @@
 #include <vector>
 #include <cstdlib>
 #include <filesystem> // should i use it or not?
+#include <sys/types.h>
 #include "createCase.hpp"
 
 
@@ -48,21 +49,42 @@ void boundaryConditions::addItem(std::string name, float value, int isInt)
 
 void boundaryConditions::addBoundaryCondition(boundaryCondition bc)
 {
+	const std::string bcTypes[]={"empty","fixedValue", "zeroGradient", "symmetry","nonSlip","fixedFluxPressure"};
 	clearTemp();
 	
 }
 
+void boundaryConditions::addItem(std::string str1, std::string str2)
+{
+	tempText += str1+"\t"+str2;
+}
 void boundaryConditions::clearTemp()
 {
 	tempText = "";
 }
 
-
+// clang doesnt accept C++17 standard filesystem.
+// So need to change it later
 void createcase::createDirectory()
 {
-	std::string mkdircmd = "mkdir -p "+path;
-	if()
-	std::system(mkdircmd.c_str());
+	std::filesystem::path fpath = casepath;
+
+	std::string mkdircmd = "mkdir -p "+casepath;
+	if(std::filesystem::is_directory(fpath))
+	{
+		; // do nothing
+	}
+	else
+	{
+		std::system(mkdircmd.c_str());
+	}
+	
 }
 
+/*
+-------------------------------------
+---------------------------------/   /
+                                /   /
+							   /   /
+*/
 
