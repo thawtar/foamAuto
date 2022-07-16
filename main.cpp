@@ -1,5 +1,6 @@
 #include <iostream>
 #include "createMesh.hpp"
+#include "createCase.hpp"
 using namespace std;
 float x_1, x_2, y_1, y_2, z_1, z_2;
 int nx, ny, nz;
@@ -42,11 +43,20 @@ void snappyTest()
 	shm.run();
 }
 
+void caseTest()
+{
+	boundaryConditions mainBC;
+	mainBC.run();
+}
+
+
+
 int main()
 {
 
 	//ask_data();
 	//test();
-	snappyTest();
+	//snappyTest();
+	caseTest();
 	return 0;
 }

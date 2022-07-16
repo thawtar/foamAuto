@@ -69,6 +69,7 @@ private:
 	void addItem(std::string name, float value, int isInt);
 	void addItem(std::string str1, std::string str2);
 	void writeHeader();
+	void showText();
 	void clearTemp();
 
 public:
@@ -77,8 +78,7 @@ public:
 	boundaryConditions(std::string filename);
 	boundaryConditions(std::string filename, int bcCount);
 	~boundaryConditions();
-	
-
+	void run();
 };
 
 class constants

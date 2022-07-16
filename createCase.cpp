@@ -13,6 +13,18 @@ boundaryConditions::boundaryConditions(int bcCount)
 	boundaryCount = bcCount;
 }
 
+boundaryConditions::boundaryConditions()
+{
+	//boundaryCount = bcCount;
+}
+
+boundaryConditions::~boundaryConditions()
+{
+	//boundaryCount = bcCount;
+	if (bcfile.is_open())
+		bcfile.close();
+}
+
 boundaryConditions::boundaryConditions(std::string filename)
 {
 	bcFileName = filename;
@@ -63,8 +75,20 @@ void boundaryConditions::clearTemp()
 	tempText = "";
 }
 
+void boundaryConditions::run()
+{
+	writeHeader();
+	showText();
+}
+
+void boundaryConditions::showText()
+{
+	std::cout << bcText << std::endl;
+}
+
 // clang doesnt accept C++17 standard filesystem.
-// So need to change it later
+// So need to change it later+-
+/*
 void createcase::createDirectory()
 {
 	std::filesystem::path fpath = casepath;
@@ -79,7 +103,7 @@ void createcase::createDirectory()
 		std::system(mkdircmd.c_str());
 	}
 	
-}
+}*/
 
 /*
 -------------------------------------
