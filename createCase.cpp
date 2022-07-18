@@ -10,33 +10,73 @@
 // Constructor with the number of boundaries defined
 boundaryConditions::boundaryConditions(int bcCount)
 {
+	clearMainText();
+	for(int i=0;i<DIMENSIONS;i++)
+		dimensions[i] = 0;
 	boundaryCount = bcCount;
 	bcClass = 0; // default value for boundary condition class
 }
-
 boundaryConditions::boundaryConditions()
 {
 	//boundaryCount = bcCount;
+	clearMainText();
+	for(int i=0;i<DIMENSIONS;i++)
+		dimensions[i] = 0;
 }
-
 boundaryConditions::~boundaryConditions()
 {
 	//boundaryCount = bcCount;
 	if (bcfile.is_open())
 		bcfile.close();
 }
-
 boundaryConditions::boundaryConditions(std::string filename)
 {
+	clearMainText();
+	for(int i=0;i<DIMENSIONS;i++)
+		dimensions[i] = 0;
 	bcFileName = filename;
 	bcfile.open(bcFileName);
 }
-
 boundaryConditions::boundaryConditions(std::string filename, int bcCount)
 {
+	clearMainText();
+	for(int i=0;i<DIMENSIONS;i++)
+		dimensions[i] = 0;
 	bcFileName = filename;
 	bcfile.open(bcFileName);
 	boundaryCount = bcCount;
+}
+
+void boundaryConditions::setBCClass(int BCClass) // to set whether it is a volVectorField, volScalarField, etc
+{
+
+	bcClass = BCClass;
+}
+void boundaryConditions::setObjectType(std::string objType)
+{
+	objectType = objType;
+}
+
+void boundaryConditions::setBCFile(std::string filename)
+{
+	if(!bcfile.is_open())
+		bcfile.open(filename);
+}
+
+void boundaryConditions::setBCCount(int bcCount)
+{
+	if(bcCount>0)
+		boundaryCount = bcCount;
+}
+
+void boundaryConditions::setDim(int value, int indx)
+{
+	if(indx >=DIMENSIONS)
+	{
+		std::cout << "Error: index overflow in dimensions\n";
+		exit(-1);
+	}
+	dimensions[indx]=value;
 }
 
 void boundaryConditions::writeHeader()
@@ -75,10 +115,15 @@ void boundaryConditions::clearTemp()
 {
 	tempText = "";
 }
+void boundaryConditions::addTextToMain()
+{
+	bcText += tempText;
+}
 
 void boundaryConditions::run()
 {
 	writeHeader();
+	write_dimensions();
 	showText();
 }
 
@@ -98,12 +143,44 @@ void boundaryConditions::write_foamFile()
 	clearTemp();
 	addText("\nFoamFile\n{\n\tversion\t2.0;\n");
 	addText("\tformat\tascii;\nclass\t");
-	switch bcClass:
+	switch (bcClass){
+		case volScalarField:
+			addText("volScalarField");
+			break;
+		case volVectorField:
+			addText("volVectorField");
+			break;
+		case surfaceScalarField:
+			addText("surfaceScalarField");
+			break;
+		case surfaceVectorField:
+			addText("surfaceVectorField");
+			break;
+		default:
+			std::cout<<"Error, wrong field type chosen"<< std::endl;
+			exit(-1);
+	}
+	addText(";\n\tobject\t");
+	addText(objectType);
+	addText(";\n}\n");
 
 }
 void boundaryConditions::write_dimensions()
 {
-
+	clearTemp();
+	std::string tmp;
+	addText("\ndimensions\t[");
+	for(int i=0;i<DIMENSIONS;i++)
+	{
+		tmp = std::to_string(dimensions[i])+" ";
+		addText(tmp);
+	}
+	addText("];\n");
+	addTextToMain();
+}
+void boundaryConditions::clearMainText()
+{
+	bcText = "";
 }
 void boundaryConditions::write_internalField()
 {

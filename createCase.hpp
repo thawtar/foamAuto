@@ -27,7 +27,10 @@
 #define surfaceScalarField 2
 #define surfaceVectorField 3
 
+// we have 7 dimensions [kg m s K mol A cd]
+#define DIMENSIONS 7
 
+/* better not use unnecessary struct here
 struct dimensions
 {
 	int kg;
@@ -35,7 +38,7 @@ struct dimensions
 	int sec;
 	int Kelvin;
 }typedef dimensions;
-
+*/
 struct transportProperties
 {
 	float rho;
@@ -65,11 +68,23 @@ private:
 	std::string objectType;
 	std::string bcFileName; // name of the boundary condition file
 	std::vector<boundaryCondition> bcs;
+	int dimensions[7]; // for the dimension of the variable
 	void addBoundaryCondition(boundaryCondition bc);
 	void addItem(std::string name, float value, int isInt);
 	void addItem(std::string str1, std::string str2);
 	void addText(std::string str);
 	void writeHeader();
+
+	// These functions will change/set the values of the members of boundaryCondtions object
+	void setBCClass(int BCClass); // to set whether it is a volVectorField, volScalarField, etc
+	void setObjectType(std::string objType);
+	void setBCFile(std::string filename);
+	void setBCCount(int bcCount);
+	void setDim(int value, int indx);
+
+
+	// This part just writes down the boundary condition based on
+	// the data contained in this class.
 	// Boundary condition can be divided into 5 parts:
 	// 1. Header, 2. FoamFile, 3. dimensions 4. internalField
 	// 5. boundaryField.
@@ -79,7 +94,8 @@ private:
 	void write_boundaryField();
 	void showText();
 	void clearTemp();
-
+	void addTextToMain(); // to add tempText to bcText
+	void clearMainText();
 public:
 	boundaryConditions();
 	boundaryConditions(int bcCount);
