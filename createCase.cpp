@@ -11,6 +11,7 @@
 boundaryConditions::boundaryConditions(int bcCount)
 {
 	boundaryCount = bcCount;
+	bcClass = 0; // default value for boundary condition class
 }
 
 boundaryConditions::boundaryConditions()
@@ -84,6 +85,31 @@ void boundaryConditions::run()
 void boundaryConditions::showText()
 {
 	std::cout << bcText << std::endl;
+}
+
+void boundaryConditions::addText(std::string str)
+{
+	tempText+=str;
+}
+
+void boundaryConditions::write_foamFile() 
+// to write FoamFile header
+{
+	clearTemp();
+	addText("\nFoamFile\n{\n\tversion\t2.0;\n");
+	addText("\tformat\tascii;\nclass\t");
+}
+void boundaryConditions::write_dimensions()
+{
+
+}
+void boundaryConditions::write_internalField()
+{
+
+}
+void boundaryConditions::write_boundaryField()
+{
+
 }
 
 // clang doesnt accept C++17 standard filesystem.

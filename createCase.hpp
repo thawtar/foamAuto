@@ -68,7 +68,15 @@ private:
 	void addBoundaryCondition(boundaryCondition bc);
 	void addItem(std::string name, float value, int isInt);
 	void addItem(std::string str1, std::string str2);
+	void addText(std::string str);
 	void writeHeader();
+	// Boundary condition can be divided into 5 parts:
+	// 1. Header, 2. FoamFile, 3. dimensions 4. internalField
+	// 5. boundaryField.
+	void write_foamFile();
+	void write_dimensions();
+	void write_internalField();
+	void write_boundaryField();
 	void showText();
 	void clearTemp();
 
