@@ -98,6 +98,8 @@ void boundaryConditions::write_foamFile()
 	clearTemp();
 	addText("\nFoamFile\n{\n\tversion\t2.0;\n");
 	addText("\tformat\tascii;\nclass\t");
+	switch bcClass:
+
 }
 void boundaryConditions::write_dimensions()
 {
