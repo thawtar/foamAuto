@@ -22,6 +22,8 @@ boundaryConditions::boundaryConditions()
 	clearMainText();
 	for(int i=0;i<DIMENSIONS;i++)
 		dimensions[i] = 0;
+	bcClass = 0; // default value
+	boundaryCount = 1; // default value
 }
 boundaryConditions::~boundaryConditions()
 {
@@ -36,6 +38,8 @@ boundaryConditions::boundaryConditions(std::string filename)
 		dimensions[i] = 0;
 	bcFileName = filename;
 	bcfile.open(bcFileName);
+	bcClass = 0; // default value
+	boundaryCount = 1; // default value
 }
 boundaryConditions::boundaryConditions(std::string filename, int bcCount)
 {
@@ -44,6 +48,7 @@ boundaryConditions::boundaryConditions(std::string filename, int bcCount)
 		dimensions[i] = 0;
 	bcFileName = filename;
 	bcfile.open(bcFileName);
+	bcClass = 0; // default value
 	boundaryCount = bcCount;
 }
 
@@ -123,7 +128,13 @@ void boundaryConditions::addTextToMain()
 void boundaryConditions::run()
 {
 	writeHeader();
+	setObjectType("U");
+	setDim(1,1);
+	setDim(-1,2);
+	write_foamFile();
 	write_dimensions();
+	write_internalField();
+	write_boundaryField();
 	showText();
 }
 
@@ -142,7 +153,7 @@ void boundaryConditions::write_foamFile()
 {
 	clearTemp();
 	addText("\nFoamFile\n{\n\tversion\t2.0;\n");
-	addText("\tformat\tascii;\nclass\t");
+	addText("\tformat\tascii;\n\tclass\t");
 	switch (bcClass){
 		case volScalarField:
 			addText("volScalarField");
@@ -163,6 +174,7 @@ void boundaryConditions::write_foamFile()
 	addText(";\n\tobject\t");
 	addText(objectType);
 	addText(";\n}\n");
+	addTextToMain();
 
 }
 void boundaryConditions::write_dimensions()
@@ -184,11 +196,24 @@ void boundaryConditions::clearMainText()
 }
 void boundaryConditions::write_internalField()
 {
-
+	clearTemp();
+	addText("\ninternalField\t");
+	if(bcClass==surfaceVectorField||bcClass==volVectorField)
+		addText("uniform (0 0 0);\n");
+	else
+	{
+		/* code */
+		addText("uniform 0;\n");
+	}
+	addTextToMain();
 }
 void boundaryConditions::write_boundaryField()
 {
-
+	clearTemp();
+	addText("\nboundaryField\n{\n");
+	// add each boundary condition here
+	addText("\n}\n");
+	addTextToMain();
 }
 
 // clang doesnt accept C++17 standard filesystem.
