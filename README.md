@@ -12,6 +12,8 @@ As of 12th July 2022, snappyHexMesh can be generated. But a lot of testing and d
 
 As of 12th July 2022, case directory creation functionality is initiated.
 
+As of 23rd July 2022, boundary conditions can be created as a part of case directory creation functionality.
+
 This code is stll very raw and it has a lot of hard coded parts. 
 
 Advices, opinions and coordination are highly welcomed!
