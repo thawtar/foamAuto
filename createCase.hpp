@@ -27,6 +27,9 @@
 #define surfaceScalarField 2
 #define surfaceVectorField 3
 
+#define Scalar 0
+#define Vector 1
+
 // we have 7 dimensions [kg m s K mol A cd]
 #define DIMENSIONS 7
 
@@ -54,6 +57,7 @@ struct boundaryCondition
 	int valueType; // type of value: scalar or vector
 	float valueX, valueY, valueZ; // in case of defining vector values
 	float scalarValue; // in case of defining scalar values
+	int scalarVector;
 };
 
 // It is necessary to create a new instance of this class for each boundary condition file
@@ -69,7 +73,9 @@ private:
 	std::string bcFileName; // name of the boundary condition file
 	std::vector<boundaryCondition> bcs;
 	int dimensions[7]; // for the dimension of the variable
-	void addBoundaryCondition(boundaryCondition bc);
+	void writeBoundaryCondition(boundaryCondition bc);
+	void addScalarBoundaryCondition(const std::string name, int bcType,float value);
+	void addVectorBoundaryCondition(const std::string name, int bcType,float x,float y, float z);
 	void addItem(std::string name, float value, int isInt);
 	void addItem(std::string str1, std::string str2);
 	void addText(std::string str);
@@ -92,6 +98,7 @@ private:
 	void write_dimensions();
 	void write_internalField();
 	void write_boundaryField();
+	void write_multiple_boundary_conditions();
 	void showText();
 	void clearTemp();
 	void addTextToMain(); // to add tempText to bcText

@@ -97,6 +97,7 @@ void boundaryConditions::writeHeader()
 bcText += tempText;
 }
 
+// There are two functions having the same name. name+value and name+string(type)
 void boundaryConditions::addItem(std::string name, float value, int isInt)
 {
     if(isInt)
@@ -105,17 +106,73 @@ void boundaryConditions::addItem(std::string name, float value, int isInt)
         tempText += name + "\t" + std::to_string(value) + ";\n";
 }
 
-void boundaryConditions::addBoundaryCondition(boundaryCondition bc)
+void boundaryConditions::addItem(std::string str1, std::string str2)
+{
+	tempText += "\t"+str1+"\t"+str2;
+}
+
+void boundaryConditions::writeBoundaryCondition(boundaryCondition bc)
 {
 	const std::string bcTypes[]={"empty","fixedValue", "zeroGradient", "symmetry","nonSlip","fixedFluxPressure"};
 	clearTemp();
-	
+	addText("\n");
+	addText(bc.name);
+	addText("\n  {\n");
+	std::string bcValueString;
+	addItem("type", bcTypes[bc.bcType]);
+	if(bc.scalarVector==Scalar)
+	{
+		addItem("\n\tvalue\tuniform",std::to_string(bc.scalarValue));
+		addText(";");
+	}
+	if(bc.scalarVector==Vector)
+	{
+		bcValueString = "\nvalue\tuniform("+std::to_string(bc.valueX)+" "+std::to_string(bc.valueY)+" "+std::to_string(bc.valueZ)+");\n";
+		addText(bcValueString);
+	}
+	addText("\n  }");
+	addTextToMain();
 }
 
-void boundaryConditions::addItem(std::string str1, std::string str2)
+void boundaryConditions::write_multiple_boundary_conditions()
 {
-	tempText += str1+"\t"+str2;
+	// iterate over the whole boundary conditions vector
+	for(auto iterator=bcs.begin();iterator!=bcs.end();++iterator)
+	{
+		writeBoundaryCondition(*iterator);
+	}
 }
+
+
+
+void boundaryConditions::addVectorBoundaryCondition(const std::string name, int bcType,float x,float y, float z)
+{
+	const std::string bcTypes[]={"empty","fixedValue", "zeroGradient", "symmetry","nonSlip","fixedFluxPressure"};
+	boundaryCondition aBc;
+	aBc.bcType = bcType;
+	aBc.name = name;
+	aBc.scalarValue = 0; // it is vector boundary condition
+	aBc.valueX = x;
+	aBc.valueY = y;
+	aBc.valueZ = z;
+	aBc.indx = 0;
+	aBc.scalarVector = Vector; //vector
+	bcs.push_back(aBc);
+}
+
+void boundaryConditions::addScalarBoundaryCondition(const std::string name, int bcType,float value)
+{
+	const std::string bcTypes[]={"empty","fixedValue", "zeroGradient", "symmetry","nonSlip","fixedFluxPressure"};
+	boundaryCondition aBc;
+	aBc.bcType = bcType;
+	aBc.name = name;
+	aBc.scalarValue = value; // it is vector boundary condition
+	aBc.indx = 0;
+	aBc.scalarVector = Scalar; //scalar value
+	bcs.push_back(aBc);
+}
+
+
 void boundaryConditions::clearTemp()
 {
 	tempText = "";
@@ -123,6 +180,7 @@ void boundaryConditions::clearTemp()
 void boundaryConditions::addTextToMain()
 {
 	bcText += tempText;
+	clearTemp();
 }
 
 void boundaryConditions::run()
@@ -131,6 +189,8 @@ void boundaryConditions::run()
 	setObjectType("U");
 	setDim(1,1);
 	setDim(-1,2);
+	addScalarBoundaryCondition("inlet",fixedValue,10.1);
+	addScalarBoundaryCondition("outlet",zeroGradient,0);
 	write_foamFile();
 	write_dimensions();
 	write_internalField();
@@ -207,10 +267,14 @@ void boundaryConditions::write_internalField()
 	}
 	addTextToMain();
 }
+
+// this is just a glue code to connect all the parts to write out the boundary field
 void boundaryConditions::write_boundaryField()
 {
 	clearTemp();
 	addText("\nboundaryField\n{\n");
+	addTextToMain();
+	write_multiple_boundary_conditions();
 	// add each boundary condition here
 	addText("\n}\n");
 	addTextToMain();
