@@ -109,6 +109,9 @@ public:
 	boundaryConditions(std::string filename);
 	boundaryConditions(std::string filename, int bcCount);
 	~boundaryConditions();
+	void inputScalarBoundaryCondition();
+	void inputVectorBoundaryCondition();
+	void inputMultipleBoundaryConditions();
 	void run();
 };
 

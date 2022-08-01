@@ -23,13 +23,14 @@ boundaryConditions::boundaryConditions()
 	for(int i=0;i<DIMENSIONS;i++)
 		dimensions[i] = 0;
 	bcClass = 0; // default value
-	boundaryCount = 1; // default value
+	boundaryCount = -1; //this is undefined flag. 
 }
 boundaryConditions::~boundaryConditions()
 {
 	//boundaryCount = bcCount;
 	if (bcfile.is_open())
 		bcfile.close();
+		boundaryCount = -1;
 }
 boundaryConditions::boundaryConditions(std::string filename)
 {
@@ -39,7 +40,7 @@ boundaryConditions::boundaryConditions(std::string filename)
 	bcFileName = filename;
 	bcfile.open(bcFileName);
 	bcClass = 0; // default value
-	boundaryCount = 1; // default value
+	boundaryCount = -1; // default value
 }
 boundaryConditions::boundaryConditions(std::string filename, int bcCount)
 {
@@ -281,6 +282,74 @@ void boundaryConditions::write_boundaryField()
 	addTextToMain();
 }
 
+void boundaryConditions::inputScalarBoundaryCondition()
+{
+	std::string name;
+	int BCType;
+	float value;
+	std::cout<<"Enter Boundary Condition\n";
+	std::cout<<"Enter patch name: ";
+	std::cin>>name;
+	std::cout<<"\nEnter Boundary condition type [0:empty, 1:fixedValue, 2:zeroGradient, 3:symmetry]:";
+	std::cin>>BCType;
+	if(BCType==1)
+	{
+		std::cout<<"\nEnter value of boundary condition: ";
+		std::cin>>value;
+	}
+	else
+		value = 0;
+	addScalarBoundaryCondition(name,BCType,value);
+}
+
+void boundaryConditions::inputVectorBoundaryCondition()
+{
+	std::string name;
+	int BCType;
+	float valuex, valuey, valuez;
+	std::cout<<"Enter Boundary Condition\n";
+	std::cout<<"Enter patch name: ";
+	std::cin>>name;
+	std::cout<<"\nEnter Boundary condition type [0:empty, 1:fixedValue, 2:zeroGradient, 3:symmetry]:";
+	std::cin>>BCType;
+	if(BCType==1)
+	{
+		std::cout<<"\nEnter value of boundary condition: ";
+		std::cin>>valuex>>valuey>>valuez;
+	}
+	else
+	{
+		valuex = 0;
+		valuey = 0;
+		valuez = 0;
+	}
+	addVectorBoundaryCondition(name,BCType,valuex,valuey,valuez);
+}
+
+void boundaryConditions::inputMultipleBoundaryConditions()
+{
+	int vectScalar=0;
+	if(boundaryCount=-1) // if there is no boundary count defined, yet
+	{
+		std::cout<<"\nEnter Boundary Count: ";
+		std::cin >> boundaryCount;
+	}
+	if(boundaryCount<=0) // if the input was wrong
+	{
+		std::cout<<"\nBoundary count not properly typed!!!\nExiting...\n";
+		exit(-1);
+	}
+	std::cout<<"\nEnter Boundary Condition Type[0:Scalar, 1:Vector]: ";
+	std::cin >> vectScalar;
+	for(int i=0;i<boundaryCount;i++)
+	{
+		if(!vectScalar)
+			inputScalarBoundaryCondition();
+		else
+			inputVectorBoundaryCondition();
+	}
+
+}
 // clang doesnt accept C++17 standard filesystem.
 // So need to change it later+-
 /*
