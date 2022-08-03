@@ -188,11 +188,7 @@ void boundaryConditions::run()
 	setObjectType("U");
 	setDim(1,1);
 	setDim(-1,2);
-	addScalarBoundaryCondition("inlet",fixedValue,10.1);
-	addScalarBoundaryCondition("outlet",zeroGradient,0);
-	addVectorBoundaryCondition("inlet",fixedValue,1,0,0);
-	addVectorBoundaryCondition("outlet",zeroGradient,0,0,0);
-	addVectorBoundaryCondition("sides",symmetry,0,0,0);
+	inputMultipleBoundaryConditions();
 	write_foamFile();
 	write_dimensions();
 	write_internalField();

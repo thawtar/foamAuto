@@ -97,7 +97,7 @@ private:
 	void write_foamFile();
 	void write_dimensions();
 	void write_internalField();
-	void write_boundaryField();
+	
 	void write_multiple_boundary_conditions();
 	void showText();
 	void clearTemp();
@@ -112,6 +112,7 @@ public:
 	void inputScalarBoundaryCondition();
 	void inputVectorBoundaryCondition();
 	void inputMultipleBoundaryConditions();
+	void write_boundaryField();
 	void run();
 };
 

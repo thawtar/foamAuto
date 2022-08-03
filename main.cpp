@@ -47,6 +47,8 @@ void caseTest()
 {
 	boundaryConditions mainBC;
 	mainBC.run();
+	//mainBC.inputMultipleBoundaryConditions();
+	//mainBC.write_boundaryField();
 }
 
 
